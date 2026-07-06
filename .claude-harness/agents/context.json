@@ -1,0 +1,24 @@
+{
+  "version": 3,
+  "lastUpdated": "2026-07-06T12:52:00Z",
+  "currentSession": null,
+  "projectContext": {
+    "name": "测验2",
+    "techStack": ["Unknown"],
+    "testingFramework": "",
+    "buildCommand": "",
+    "testCommand": ""
+  },
+  "architecturalDecisions": [],
+  "activeConstraints": [],
+  "sharedState": {
+    "discoveredPatterns": {},
+    "fileIndex": {
+      "components": [],
+      "apiRoutes": [],
+      "tests": [],
+      "configs": []
+    }
+  },
+  "agentResults": []
+}
