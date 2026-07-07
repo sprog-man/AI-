@@ -1,7 +1,31 @@
 {
   "version": 3,
-  "generatedAt": null,
-  "nodes": {},
-  "hotspots": [],
-  "criticalPaths": []
+  "generatedAt": "2026-07-07T18:30:00Z",
+  "nodes": {
+    "AuthController": { "type": "controller", "dependsOn": ["AuthService", "UserRepository"], "dependents": ["frontend"] },
+    "AuthService": { "type": "service", "dependsOn": ["UserRepository", "RedisTemplate"], "dependents": ["AuthController"] },
+    "PlanController": { "type": "controller", "dependsOn": ["PlanService", "AgentService", "AuthService", "TravelPlanRepository"], "dependents": ["frontend"] },
+    "PlanService": { "type": "service", "dependsOn": ["TravelPlanRepository", "ExecutorService"], "dependents": ["PlanController"] },
+    "AgentService": { "type": "service", "dependsOn": ["TavilySearchTool", "GaodePOITool", "GaodeRouteTool", "WeatherTool", "UnsplashImageTool"], "dependents": ["PlanService"] },
+    "TavilySearchTool": { "type": "tool", "dependsOn": ["RestTemplate"], "dependents": ["AgentService"] },
+    "GaodePOITool": { "type": "tool", "dependsOn": ["RestTemplate"], "dependents": ["AgentService"] },
+    "GaodeRouteTool": { "type": "tool", "dependsOn": ["RestTemplate"], "dependents": ["AgentService"] },
+    "WeatherTool": { "type": "tool", "dependsOn": ["RestTemplate"], "dependents": ["AgentService"] },
+    "UnsplashImageTool": { "type": "tool", "dependsOn": ["RestTemplate"], "dependents": ["AgentService"] },
+    "UserRepository": { "type": "repository", "dependsOn": [], "dependents": ["AuthService"] },
+    "TravelPlanRepository": { "type": "repository", "dependsOn": [], "dependents": ["PlanService"] },
+    "RedisConfig": { "type": "config", "dependsOn": [], "dependents": ["AuthService"] },
+    "SecurityConfig": { "type": "config", "dependsOn": ["JwtAuthenticationFilter"], "dependents": [] },
+    "JwtAuthenticationFilter": { "type": "filter", "dependsOn": ["AuthService"], "dependents": ["SecurityConfig"] }
+  },
+  "hotspots": [
+    { "node": "AuthService", "reason": "被多个控制器依赖，认证核心" },
+    { "node": "AgentService", "reason": "编排5个外部工具，是AI旅行社核心逻辑" }
+  ],
+  "criticalPaths": [
+    "AuthController -> AuthService -> UserRepository",
+    "PlanController -> PlanService -> AgentService -> TavilySearchTool",
+    "PlanController -> PlanService -> AgentService -> GaodePOITool",
+    "PlanController -> PlanService -> AgentService -> WeatherTool"
+  ]
 }

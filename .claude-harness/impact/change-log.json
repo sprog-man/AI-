@@ -1,4 +1,41 @@
 {
   "version": 3,
-  "entries": []
+  "entries": [
+    {
+      "date": "2026-07-07T14:00:00Z",
+      "feature": "feature-001",
+      "type": "create",
+      "description": "项目骨架搭建",
+      "files": ["backend/pom.xml", "backend/src/main/java/com/travel/ai/AiTravelApplication.java", "backend/src/main/resources/application.yml", "frontend/package.json", "frontend/src/main.ts", "frontend/src/router/index.ts", "frontend/src/views/AuthView.vue", "..."],
+      "impact": "high",
+      "affectedComponents": ["后端项目结构", "前端项目结构", "数据库实体", "API控制器", "Agent工具"]
+    },
+    {
+      "date": "2026-07-07T14:16:00Z",
+      "feature": "feature-002",
+      "type": "modify",
+      "description": "认证模块完整实现",
+      "files": ["backend/src/main/java/com/travel/ai/service/AuthService.java", "backend/src/main/java/com/travel/ai/controller/AuthController.java", "backend/src/main/java/com/travel/ai/config/RedisConfig.java"],
+      "impact": "high",
+      "affectedComponents": ["AuthService", "AuthController", "RedisConfig"]
+    },
+    {
+      "date": "2026-07-07T18:02:00Z",
+      "feature": "feature-003",
+      "type": "modify",
+      "description": "计划生成与CRUD完整实现",
+      "files": ["backend/src/main/java/com/travel/ai/service/PlanService.java", "backend/src/main/java/com/travel/ai/service/AgentService.java", "backend/src/main/java/com/travel/ai/controller/PlanController.java"],
+      "impact": "high",
+      "affectedComponents": ["PlanService", "AgentService", "PlanController"]
+    },
+    {
+      "date": "2026-07-07T18:30:00Z",
+      "feature": "harness-memory",
+      "type": "update",
+      "description": "更新Harness记忆文件",
+      "files": [".claude-harness/features/archive.json", ".claude-harness/memory/episodic/decisions.json", ".claude-harness/memory/procedural/failures.json", ".claude-harness/memory/procedural/successes.json", ".claude-harness/memory/semantic/architecture.json", ".claude-harness/memory/semantic/constraints.json", ".claude-harness/memory/semantic/entities.json", ".claude-harness/claude-progress.json"],
+      "impact": "low",
+      "affectedComponents": ["Harness记忆系统"]
+    }
+  ]
 }

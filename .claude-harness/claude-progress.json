@@ -1,17 +1,34 @@
 {
-  "lastUpdated": "2026-07-06T12:52:00Z",
+  "lastUpdated": "2026-07-07T18:30:00Z",
   "currentProject": "测验2",
   "lastSession": {
-    "summary": "Initial harness setup (v3.0)",
-    "completedTasks": [],
+    "summary": "Feature-003 计划生成与CRUD实现",
+    "completedTasks": [
+      "feature-001: 项目骨架搭建",
+      "feature-002: 认证模块完整实现",
+      "feature-003: 计划生成与CRUD完整实现"
+    ],
     "blockers": [],
-    "nextSteps": ["Review CLAUDE.md and customize", "Run /claude-harness:start to begin"]
+    "nextSteps": [
+      "实现 Agent 实际调用外部 API 生成计划",
+      "实现聊天微调完整逻辑",
+      "完善前端 FormView/PlanView 交互"
+    ]
   },
-  "recentChanges": [],
-  "knownIssues": [],
+  "recentChanges": [
+    { "date": "2026-07-07T14:00:00Z", "feature": "feature-001", "type": "merged", "files": 54, "lines": 1893 },
+    { "date": "2026-07-07T14:16:00Z", "feature": "feature-002", "type": "merged", "files": 3, "lines": 169 },
+    { "date": "2026-07-07T18:02:00Z", "feature": "feature-003", "type": "merged", "files": 3, "lines": 247 },
+    { "date": "2026-07-07T18:30:00Z", "feature": "harness-memory", "type": "commit", "files": 8, "lines": 175 }
+  ],
+  "knownIssues": [
+    "AgentService.generatePlan() 目前是模拟实现，未实际调用外部 API",
+    "AgentService.chatModify() 是 TODO 占位实现",
+    "前端页面尚未对接真实 API"
+  ],
   "environmentState": {
     "devServerRunning": false,
-    "lastSuccessfulBuild": null,
-    "lastTypeCheck": null
+    "lastSuccessfulBuild": "2026-07-07T18:02:43+08:00",
+    "lastTypeCheck": "mvn compile SUCCESS"
   }
 }
