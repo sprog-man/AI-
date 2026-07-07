@@ -1,4 +1,33 @@
 {
   "version": 3,
-  "entries": []
+  "entries": [
+    {
+      "failure": "Java 变量名使用中文（String攻略Result）导致编译失败",
+      "cause": "Windows 环境下 Java 编译器无法正确处理 Unicode 标识符",
+      "fix": "所有 Java 标识符必须使用纯 ASCII",
+      "date": "2026-07-07",
+      "severity": "high"
+    },
+    {
+      "failure": "sed 替换中文标识符时产生 StringtavilyResult（缺少空格）",
+      "cause": "sed 's/攻略Result/tavilyResult/g' 替换后变量声明变成 StringtavilyResult",
+      "fix": "重写整个文件而非 sed 替换",
+      "date": "2026-07-07",
+      "severity": "medium"
+    },
+    {
+      "failure": "gh issue create 的 label 参数要求 label 已存在于仓库",
+      "cause": "GitHub 仓库不存在 'claude-harness' label",
+      "fix": "不使用 label 参数或先创建 label",
+      "date": "2026-07-07",
+      "severity": "medium"
+    },
+    {
+      "failure": "LangChain4j 0.34.0 的 ChatModel 接口路径是 dev.langchain4j.model.chat.ChatLanguageModel",
+      "cause": "错误使用 dev.langchain4j.model.chat.ChatModel",
+      "fix": "使用 ChatLanguageModel 替代",
+      "date": "2026-07-07",
+      "severity": "high"
+    }
+  ]
 }

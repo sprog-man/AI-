@@ -1,4 +1,20 @@
 {
   "version": 3,
-  "entries": []
+  "entries": [
+    {
+      "pattern": "mvn compile 是后端代码变更的可靠验证手段",
+      "context": "feature-001/002/003 均通过 mvn compile 验证",
+      "date": "2026-07-07"
+    },
+    {
+      "pattern": "gh issue/create PR 使用 -F 从文件读取 body 可避免参数过长问题",
+      "context": "feature-002 issue 创建时 --body 参数过长导致失败",
+      "date": "2026-07-07"
+    },
+    {
+      "pattern": "gh issue create 的 label 必须先在仓库中存在，否则报错",
+      "context": "feature-001 PR 创建时 label 'claude-harness' 不存在导致失败",
+      "date": "2026-07-07"
+    }
+  ]
 }

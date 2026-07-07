@@ -1,4 +1,20 @@
 {
   "version": 3,
-  "entities": []
+  "entities": [
+    {
+      "name": "User",
+      "table": "users",
+      "fields": ["id (BIGSERIAL)", "username (VARCHAR 50)", "email (VARCHAR 100)", "password_hash (VARCHAR 255 BCrypt)", "created_at", "updated_at"]
+    },
+    {
+      "name": "TravelPlan",
+      "table": "travel_plans",
+      "fields": ["id (BIGSERIAL)", "user_id (FK)", "title", "departure_city", "destination_city", "start_date", "end_date", "travel_mode (ENUM)", "budget_level (ENUM)", "preferences (TEXT)", "plan_data (JSONB)", "status (ENUM: GENERATING/COMPLETED/FAILED)", "created_at", "updated_at"]
+    },
+    {
+      "name": "PlanCache",
+      "table": "plan_cache",
+      "fields": ["id (BIGSERIAL)", "destination (VARCHAR 100)", "cache_key (VARCHAR 200)", "cache_data (JSONB)", "expires_at (TIMESTAMP)", "created_at"]
+    }
+  ]
 }

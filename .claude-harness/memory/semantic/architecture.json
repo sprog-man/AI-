@@ -1,23 +1,23 @@
 {
   "version": 3,
-  "projectType": "",
+  "projectType": "Monorepo (前后端同仓库)",
   "techStack": {
-    "framework": "",
-    "language": "Unknown",
-    "database": "",
-    "testFramework": ""
+    "framework": "Spring Boot 3.2 (后端), Vue 3.4 + Vite 5 (前端)",
+    "language": "Java 17 + TypeScript",
+    "database": "PostgreSQL 16",
+    "testFramework": "JUnit 5"
   },
   "structure": {
-    "entryPoints": [],
-    "components": [],
-    "api": [],
+    "entryPoints": ["backend/src/main/java/com/travel/ai/AiTravelApplication.java", "frontend/src/main.ts"],
+    "components": ["AuthService", "PlanService", "AgentService", "TavilySearchTool", "GaodePOITool", "GaodeRouteTool", "WeatherTool", "UnsplashImageTool"],
+    "api": ["/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout", "/api/v1/plans", "/api/v1/plans/{id}", "/api/v1/plans/{id}/chat", "/api/v1/plans/{id}/sse/progress"],
     "tests": []
   },
   "patterns": {
-    "naming": {},
-    "fileOrganization": {},
-    "codeStyle": {}
+    "naming": "后端: PascalCase 类名, camelCase 方法/字段; 前端: camelCase TS 文件",
+    "fileOrganization": "后端按层组织 (controller/service/tool/repository); 前端按功能组织 (views/stores/api)",
+    "codeStyle": "Lombok 减少样板代码, BCrypt 密码加密, JWT 无状态认证"
   },
-  "discoveredAt": "2026-07-06T12:52:00Z",
-  "lastUpdated": "2026-07-06T12:52:00Z"
+  "discoveredAt": "2026-07-07T18:30:00Z",
+  "lastUpdated": "2026-07-07T18:30:00Z"
 }

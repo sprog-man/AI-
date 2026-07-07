@@ -1,5 +1,42 @@
 {
   "version": 3,
-  "archived": [],
+  "archived": [
+    {
+      "id": "feature-001",
+      "name": "AI旅行社 - 项目骨架搭建",
+      "status": "merged",
+      "description": "搭建 Spring Boot 3 + LangChain4j 后端和 Vue 3 + TypeScript 前端骨架",
+      "branch": "feature/feature-001",
+      "github": { "issueNumber": 1, "prNumber": 2 },
+      "completedAt": "2026-07-07T14:00:00Z",
+      "filesCreated": 54,
+      "linesAdded": 1893,
+      "verification": "mvn compile SUCCESS"
+    },
+    {
+      "id": "feature-002",
+      "name": "认证模块完整实现",
+      "status": "merged",
+      "description": "AuthService 注册/登录/Token刷新/登出完整实现，RedisConfig 配置",
+      "branch": "feature/feature-002",
+      "github": { "issueNumber": 3, "prNumber": 4 },
+      "completedAt": "2026-07-07T14:16:00Z",
+      "filesChanged": 3,
+      "linesAdded": 169,
+      "verification": "mvn compile SUCCESS"
+    },
+    {
+      "id": "feature-003",
+      "name": "计划生成与 CRUD 完整实现",
+      "status": "merged",
+      "description": "PlanService + AgentService(ReAct编排) + PlanController 完整实现",
+      "branch": "feature/feature-003",
+      "github": { "issueNumber": 5, "prNumber": 6 },
+      "completedAt": "2026-07-07T18:02:00Z",
+      "filesChanged": 3,
+      "linesAdded": 247,
+      "verification": "mvn compile SUCCESS"
+    }
+  ],
   "archivedFixes": []
 }

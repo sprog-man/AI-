@@ -1,5 +1,36 @@
 {
   "version": 3,
   "maxEntries": 50,
-  "entries": []
+  "entries": [
+    {
+      "decision": "Refresh Token 使用 Redis 而非 SQL 表",
+      "reason": "Refresh Token 是短期临时凭证，TTL 自动过期天然适合 Redis；Token 轮换需要原子删除+写入，Redis SETNX 完美匹配；登出/改密时批量清除高效",
+      "date": "2026-07-06",
+      "context": "Spec v3.0 评审时发现 Redis vs SQL 矛盾，统一为 Redis"
+    },
+    {
+      "decision": "POST /plans 采用异步模式",
+      "reason": "Agent 需调用多个外部 API，总耗时波动大；同步阻塞 30s 不利于水平扩展；SSE 进度推送提供更好的用户体验",
+      "date": "2026-07-06",
+      "context": "Spec v3.0 评审时发现同步/异步歧义"
+    },
+    {
+      "decision": "攻略缓存使用 SQL plan_cache 表而非 Redis",
+      "reason": "攻略数据需要持久化、按目的地查询、支持 TTL 清理（expires_at 索引）；Redis 不适合结构化查询",
+      "date": "2026-07-06",
+      "context": "Spec v3.2 修复攻略缓存存储矛盾"
+    },
+    {
+      "decision": "Agent 使用 LangChain4j 而非 Spring AI",
+      "reason": "LangChain4j 官方支持 ReAct 范式，开箱即用，内置工具链编排；Spring AI 生态相对不成熟",
+      "date": "2026-07-06",
+      "context": "Brainstorming 阶段技术选型"
+    },
+    {
+      "decision": "Java 变量名必须使用纯 ASCII",
+      "reason": "Windows 环境下 Java 编译器无法正确处理 Unicode 标识符（如 String攻略Result），导致编译失败",
+      "date": "2026-07-07",
+      "context": "feature-003 开发中发现的编译问题"
+    }
+  ]
 }

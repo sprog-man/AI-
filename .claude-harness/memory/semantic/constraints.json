@@ -1,5 +1,31 @@
 {
   "version": 3,
-  "constraints": [],
+  "constraints": [
+    {
+      "name": "Java 标识符必须使用纯 ASCII",
+      "description": "Windows 环境下 Java 编译器无法正确处理 Unicode 标识符",
+      "category": "coding-standard"
+    },
+    {
+      "name": "Refresh Token 存储使用 Redis",
+      "description": "不使用 SQL 表，TTL 自动过期，原子性操作",
+      "category": "architecture"
+    },
+    {
+      "name": "攻略缓存使用 SQL plan_cache 表",
+      "description": "需要持久化、按目的地查询、TTL 清理",
+      "category": "architecture"
+    },
+    {
+      "name": "Agent 最大推理步数: 15 步/次生成, 8 步/次微调",
+      "description": "超出时返回中间结果 + AGENT_TIMEOUT 错误",
+      "category": "agent-governance"
+    },
+    {
+      "name": "外部 API 超时: 5s",
+      "description": "Tavily/高德/Unsplash 均为 5s 超时",
+      "category": "performance"
+    }
+  ],
   "rules": []
 }
