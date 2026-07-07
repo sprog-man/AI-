@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+backend/target/
+backend/.mvn/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Env
+.env
+.env.local
+
+# Logs
+*.log
+
+# Harness ephemeral
+.claude-harness/sessions/
+.claude-harness/memory/compaction-backups/
+
+# Local settings
+.claude/settings.local.json

@@ -1,5 +1,31 @@
 {
   "version": 3,
-  "features": [],
+  "features": [
+    {
+      "id": "feature-001",
+      "name": "AI旅行社 - 项目骨架搭建",
+      "description": "搭建 Spring Boot 3 + LangChain4j 后端和 Vue 3 + TypeScript 前端骨架，包括认证、Agent基础设施、外部API集成",
+      "status": "in_progress",
+      "acceptanceCriteria": [
+        { "scenario": "后端项目能正常启动", "given": "后端代码已创建", "when": "执行 mvn spring-boot:run", "then": "应用在 http://localhost:8080 启动成功" },
+        { "scenario": "前端项目能正常启动", "given": "前端代码已创建", "when": "执行 npm run dev", "then": "应用在 http://localhost:5173 启动成功" },
+        { "scenario": "JWT 认证能正常工作", "given": "后端已启动", "when": "发送 POST /api/v1/auth/register 请求", "then": "返回 201 状态码和用户信息" }
+      ],
+      "github": {
+        "issueNumber": 1,
+        "issueUrl": "https://github.com/sprog-man/AI-/issues/1",
+        "branch": "feature/feature-001"
+      },
+      "verificationCommands": [
+        "cd backend && mvn spring-boot:run",
+        "cd frontend && npm run dev",
+        "curl -X POST http://localhost:8080/api/v1/auth/register"
+      ],
+      "maxAttempts": 12,
+      "attempts": 0,
+      "createdAt": "2026-07-07T00:00:00Z",
+      "lastUpdated": "2026-07-07T00:00:00Z"
+    }
+  ],
   "fixes": []
 }
