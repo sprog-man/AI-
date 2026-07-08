@@ -23,7 +23,14 @@ public class GaodePOITool {
                     + "&citylimit=" + (citylimit != null ? citylimit : "true");
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            return "高德 POI 查询失败: " + e.getMessage();
+            return getFallbackResult(city, keywords);
         }
+    }
+
+    private String getFallbackResult(String city, String keywords) {
+        return String.format(
+                "{\"note\": \"高德 POI 查询不可用，使用占位数据\", \"city\": \"%s\", \"keywords\": \"%s\", \"poiList\": []}",
+                city, keywords
+        );
     }
 }

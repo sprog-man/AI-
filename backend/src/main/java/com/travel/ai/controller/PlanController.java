@@ -46,6 +46,9 @@ public class PlanController {
             com.travel.ai.model.entity.User user = authService.findUserByEmail(
                     authService.getEmailFromToken(token));
 
+            // Validate business rules
+            request.validateBusinessRules();
+
             TravelPlan plan = planService.createPlanWithUser(request, user);
 
             Map<String, Object> formData = Map.of(
@@ -64,6 +67,10 @@ public class PlanController {
             PlanDTO dto = PlanDTO.fromEntity(plan);
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ApiResponse.created(dto));
+        } catch (IllegalArgumentException e) {
+            String errorCode = e.getMessage();
+            return ResponseEntity.badRequest()
+                    .body(ApiResponse.error(400, getErrorMessage(errorCode)));
         } catch (Exception e) {
             return ResponseEntity.badRequest()
                     .body(ApiResponse.error(400, "创建计划失败: " + e.getMessage()));
@@ -94,18 +101,49 @@ public class PlanController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<PlanDTO>> getPlan(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<PlanDTO>> getPlan(
+            @PathVariable Long id,
+            Authentication authentication) {
         TravelPlan plan = planService.getPlanById(id);
         if (plan == null) {
             return ResponseEntity.notFound().build();
         }
+
+        // Ownership check
+        if (authentication != null && authentication.getCredentials() != null) {
+            String token = (String) authentication.getCredentials();
+            try {
+                Long currentUserId = authService.getUserIdFromToken(token);
+                if (!currentUserId.equals(plan.getUser().getId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(ApiResponse.error(403, "无权访问此计划"));
+                }
+            } catch (Exception ignored) {
+                // Token invalid, allow access anyway (SSE endpoint is public)
+            }
+        }
+
         return ResponseEntity.ok(ApiResponse.ok(PlanDTO.fromEntity(plan)));
     }
 
     @PatchMapping("/{id}")
     public ResponseEntity<ApiResponse<PlanDTO>> updatePlan(
             @PathVariable Long id,
-            @RequestBody CreatePlanRequest request) {
+            @RequestBody CreatePlanRequest request,
+            Authentication authentication) {
+        // Ownership check
+        if (authentication != null && authentication.getCredentials() != null) {
+            String token = (String) authentication.getCredentials();
+            try {
+                Long currentUserId = authService.getUserIdFromToken(token);
+                TravelPlan plan = planService.getPlanById(id);
+                if (plan != null && !currentUserId.equals(plan.getUser().getId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                            .body(ApiResponse.error(403, "无权修改此计划"));
+                }
+            } catch (Exception ignored) {}
+        }
+
         TravelPlan plan = planService.updatePlan(id, request);
         if (plan == null) {
             return ResponseEntity.notFound().build();
@@ -114,7 +152,21 @@ public class PlanController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletePlan(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePlan(
+            @PathVariable Long id,
+            Authentication authentication) {
+        // Ownership check
+        if (authentication != null && authentication.getCredentials() != null) {
+            String token = (String) authentication.getCredentials();
+            try {
+                Long currentUserId = authService.getUserIdFromToken(token);
+                TravelPlan plan = planService.getPlanById(id);
+                if (plan != null && !currentUserId.equals(plan.getUser().getId())) {
+                    return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+                }
+            } catch (Exception ignored) {}
+        }
+
         planService.deletePlan(id);
         return ResponseEntity.noContent().build();
     }
@@ -137,4 +189,15 @@ public class PlanController {
         return emitter;
     }
 
+    /**
+     * Map ErrorCode string to user-friendly message.
+     */
+    private String getErrorMessage(String code) {
+        return switch (code) {
+            case "START_DATE_INVALID" -> "出发日期不能是过去的时间";
+            case "END_DATE_INVALID" -> "返程日期不能早于出发日期";
+            case "DATE_RANGE_EXCEEDED" -> "日期跨度不能超过 180 天";
+            default -> "请求参数无效: " + code;
+        };
+    }
 }

@@ -22,7 +22,14 @@ public class WeatherTool {
                     + "&extensions=" + extensions;
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            return "天气查询失败: " + e.getMessage();
+            return getFallbackResult(city);
         }
+    }
+
+    private String getFallbackResult(String city) {
+        return String.format(
+                "{\"note\": \"天气查询不可用\", \"city\": \"%s\", \"weather\": \"未知\"}",
+                city
+        );
     }
 }

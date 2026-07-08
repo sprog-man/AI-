@@ -24,7 +24,14 @@ public class GaodeRouteTool {
                     + "&type=" + (travelMode != null ? travelMode : "TRANSIT");
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            return "路线规划失败: " + e.getMessage();
+            return getFallbackResult(origin, destination);
         }
+    }
+
+    private String getFallbackResult(String origin, String destination) {
+        return String.format(
+                "{\"note\": \"路线规划不可用\", \"origin\": \"%s\", \"destination\": \"%s\", \"routes\": []}",
+                origin, destination
+        );
     }
 }

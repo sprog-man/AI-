@@ -22,7 +22,14 @@ public class UnsplashImageTool {
                     + "&per_page=1";
             return restTemplate.getForObject(url, String.class);
         } catch (Exception e) {
-            return "图片获取失败: " + e.getMessage();
+            return getFallbackResult(query);
         }
+    }
+
+    private String getFallbackResult(String query) {
+        return String.format(
+                "{\"note\": \"图片服务不可用\", \"query\": \"%s\", \"images\": []}",
+                query
+        );
     }
 }

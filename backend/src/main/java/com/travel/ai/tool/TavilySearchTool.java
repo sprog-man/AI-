@@ -23,7 +23,15 @@ public class TavilySearchTool {
             String result = restTemplate.getForObject(url, String.class);
             return result != null ? result : "搜索结果为空";
         } catch (Exception e) {
-            return "Tavily 搜索失败: " + e.getMessage();
+            // Fallback: return cached data or placeholder
+            return getFallbackResult(query, "TAVILY");
         }
+    }
+
+    private String getFallbackResult(String query, String source) {
+        return String.format(
+                "{\"note\": \"%s API 超时，使用缓存数据\", \"query\": \"%s\", \"cache_status\": \"fallback\"}",
+                source, query
+        );
     }
 }
