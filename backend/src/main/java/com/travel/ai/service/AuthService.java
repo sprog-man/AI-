@@ -125,4 +125,9 @@ public class AuthService {
 
     public long getAccessExpiryMs() { return accessExpiry; }
     public long getRefreshExpiryMs() { return refreshExpiry; }
+
+    public User findUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new IllegalArgumentException("USER_NOT_FOUND"));
+    }
 }

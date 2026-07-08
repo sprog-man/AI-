@@ -5,7 +5,6 @@ import com.travel.ai.model.dto.response.ApiResponse;
 import com.travel.ai.model.dto.response.PlanDTO;
 import com.travel.ai.model.dto.response.PlanPageResponse;
 import com.travel.ai.model.entity.TravelPlan;
-import com.travel.ai.repository.TravelPlanRepository;
 import com.travel.ai.service.AgentService;
 import com.travel.ai.service.AuthService;
 import com.travel.ai.service.PlanService;
@@ -40,15 +39,27 @@ public class PlanController {
             @Valid @RequestBody CreatePlanRequest request,
             Authentication authentication) {
         try {
-            // 从 JWT 中提取 userId
             String token = (String) authentication.getCredentials();
             Long userId = authService.getUserIdFromToken(token);
 
-            // 创建计划记录
-            TravelPlan plan = planService.createPlan(request, userId);
+            // Load full user entity for JPA relationship
+            com.travel.ai.model.entity.User user = authService.findUserByEmail(
+                    authService.getEmailFromToken(token));
 
-            // 异步生成计划
-            planService.generatePlanAsync(plan, mapFromRequest(request), userId);
+            TravelPlan plan = planService.createPlanWithUser(request, user);
+
+            Map<String, Object> formData = Map.of(
+                    "title", request.getTitle(),
+                    "departureCity", request.getDepartureCity(),
+                    "destinationCity", request.getDestinationCity(),
+                    "startDate", request.getStartDate().toString(),
+                    "endDate", request.getEndDate().toString(),
+                    "travelMode", request.getTravelMode().name(),
+                    "budgetLevel", request.getBudgetLevel().name(),
+                    "preferences", request.getPreferences() != null ? request.getPreferences() : ""
+            );
+
+            planService.generatePlanAsync(plan, formData, userId);
 
             PlanDTO dto = PlanDTO.fromEntity(plan);
             return ResponseEntity.status(HttpStatus.CREATED)
@@ -110,21 +121,20 @@ public class PlanController {
 
     @GetMapping("/{id}/sse/progress")
     public SseEmitter sseProgress(@PathVariable Long id) {
-        SseEmitter emitter = new SseEmitter(60000L);
+        SseEmitter emitter = new SseEmitter(300_000L); // 5 min timeout
         planService.registerEmitter(id, emitter);
+        // Send initial status
+        try {
+            TravelPlan plan = planService.getPlanById(id);
+            if (plan != null) {
+                emitter.send(SseEmitter.event()
+                        .name("status")
+                        .data(Map.of("step", "pending",
+                                "message", "等待生成...",
+                                "status", plan.getStatus().name())));
+            }
+        } catch (Exception ignored) {}
         return emitter;
     }
 
-    private Map<String, Object> mapFromRequest(CreatePlanRequest request) {
-        return Map.of(
-                "title", request.getTitle(),
-                "departureCity", request.getDepartureCity(),
-                "destinationCity", request.getDestinationCity(),
-                "startDate", request.getStartDate().toString(),
-                "endDate", request.getEndDate().toString(),
-                "travelMode", request.getTravelMode().name(),
-                "budgetLevel", request.getBudgetLevel().name(),
-                "preferences", request.getPreferences()
-        );
-    }
 }

@@ -5,26 +5,25 @@ import com.travel.ai.model.entity.TravelPlan;
 import com.travel.ai.repository.TravelPlanRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 import java.time.LocalDate;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 public class PlanService {
 
     private final TravelPlanRepository planRepository;
-    private final ExecutorService executor = Executors.newFixedThreadPool(10);
-    // 存储 SSE Emitter，key=planId
-    private final ConcurrentHashMap<Long, org.springframework.web.servlet.mvc.method.annotation.SseEmitter> emitters = new ConcurrentHashMap<>();
+    private final AgentService agentService;
+    // SSE emitters: key = planId
+    private final ConcurrentHashMap<Long, SseEmitter> emitters = new ConcurrentHashMap<>();
 
-    public PlanService(TravelPlanRepository planRepository) {
+    public PlanService(TravelPlanRepository planRepository, AgentService agentService) {
         this.planRepository = planRepository;
+        this.agentService = agentService;
     }
 
     public TravelPlan createPlan(CreatePlanRequest request, Long userId) {
@@ -44,8 +43,24 @@ public class PlanService {
         return planRepository.save(plan);
     }
 
+    public TravelPlan createPlanWithUser(CreatePlanRequest request, com.travel.ai.model.entity.User user) {
+        TravelPlan plan = new TravelPlan();
+        plan.setUser(user);
+        plan.setTitle(request.getTitle());
+        plan.setDepartureCity(request.getDepartureCity());
+        plan.setDestinationCity(request.getDestinationCity());
+        plan.setStartDate(request.getStartDate());
+        plan.setEndDate(request.getEndDate());
+        plan.setTravelMode(request.getTravelMode());
+        plan.setBudgetLevel(request.getBudgetLevel());
+        plan.setPreferences(request.getPreferences() != null ? request.getPreferences() : "");
+        plan.setPlanData("{}");
+        plan.setStatus(TravelPlan.PlanStatus.GENERATING);
+        return planRepository.save(plan);
+    }
+
     public Page<TravelPlan> getPlans(Long userId, int page, int size) {
-        Pageable pageable = PageRequest.of(page - 1, size);
+        var pageable = PageRequest.of(page - 1, size);
         return planRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
     }
 
@@ -67,27 +82,57 @@ public class PlanService {
         planRepository.deleteById(id);
     }
 
-    public void registerEmitter(Long planId, org.springframework.web.servlet.mvc.method.annotation.SseEmitter emitter) {
-        emitters.put(planId, emitter);
+    public TravelPlan savePlan(TravelPlan plan) {
+        return planRepository.save(plan);
     }
 
-    public void removeEmitter(Long planId) {
-        emitters.remove(planId);
+    public SseEmitter getEmitter(Long planId) {
+        return emitters.get(planId);
+    }
+
+    public void registerEmitter(Long planId, SseEmitter emitter) {
+        emitters.put(planId, emitter);
+        // Cleanup on completion/disconnect
+        emitter.onCompletion(() -> emitters.remove(planId));
+        emitter.onError(e -> emitters.remove(planId));
+    }
+
+    private void sendProgress(Long planId, String eventName, Map<String, Object> data) {
+        SseEmitter emitter = emitters.get(planId);
+        if (emitter != null) {
+            try {
+                emitter.send(SseEmitter.event().name(eventName).data(data));
+            } catch (Exception ignored) {
+                emitters.remove(planId);
+            }
+        }
     }
 
     @Async
     public void generatePlanAsync(TravelPlan plan, Map<String, Object> formData, Long userId) {
         try {
-            // TODO: 实际调用 AgentService 生成计划
-            // 这里先模拟 5 秒后完成
-            Thread.sleep(5000);
+            // Progress: starting
+            sendProgress(plan.getId(), "status", Map.of("step", "starting", "message", "开始生成攻略..."));
+
+            // Call real agent
+            String result = agentService.generatePlan(plan, formData);
+
+            // Progress: processing
+            sendProgress(plan.getId(), "status", Map.of("step", "processing", "message", "正在整合信息..."));
+
+            // Save result
+            plan.setPlanData(result);
             plan.setStatus(TravelPlan.PlanStatus.COMPLETED);
-            plan.setPlanData("{\"mock\": \"plan data\"}");
             planRepository.save(plan);
-        } catch (InterruptedException e) {
+
+            // Progress: done
+            sendProgress(plan.getId(), "status", Map.of("step", "completed", "message", "攻略生成完成"));
+
+        } catch (Exception e) {
             plan.setStatus(TravelPlan.PlanStatus.FAILED);
+            plan.setPlanData("{\"error\": \"" + e.getMessage() + "\"}");
             planRepository.save(plan);
-            Thread.currentThread().interrupt();
+            sendProgress(plan.getId(), "status", Map.of("step", "failed", "message", "生成失败: " + e.getMessage()));
         }
     }
 }

@@ -5,19 +5,24 @@
     "framework": "Spring Boot 3.2 (后端), Vue 3.4 + Vite 5 (前端)",
     "language": "Java 17 + TypeScript",
     "database": "PostgreSQL 16",
-    "testFramework": "JUnit 5"
+    "cache": "Redis (Refresh Token 管理)",
+    "ai": "LangChain4j + OpenAI GPT-4o-mini (ReAct Agent)",
+    "testFramework": "JUnit 5, Playwright"
   },
   "structure": {
     "entryPoints": ["backend/src/main/java/com/travel/ai/AiTravelApplication.java", "frontend/src/main.ts"],
-    "components": ["AuthService", "PlanService", "AgentService", "TavilySearchTool", "GaodePOITool", "GaodeRouteTool", "WeatherTool", "UnsplashImageTool"],
+    "components": ["AuthService", "PlanService", "AgentService", "ChatController", "TavilySearchTool", "GaodePOITool", "GaodeRouteTool", "WeatherTool", "UnsplashImageTool"],
     "api": ["/api/v1/auth/register", "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/logout", "/api/v1/plans", "/api/v1/plans/{id}", "/api/v1/plans/{id}/chat", "/api/v1/plans/{id}/sse/progress"],
-    "tests": []
+    "tests": ["tests/example.spec.ts", "playwright.config.ts"]
   },
   "patterns": {
     "naming": "后端: PascalCase 类名, camelCase 方法/字段; 前端: camelCase TS 文件",
     "fileOrganization": "后端按层组织 (controller/service/tool/repository); 前端按功能组织 (views/stores/api)",
-    "codeStyle": "Lombok 减少样板代码, BCrypt 密码加密, JWT 无状态认证"
+    "codeStyle": "Lombok 减少样板代码, BCrypt 密码加密, JWT 无状态认证, Axios interceptor 统一处理 Token 刷新",
+    "stateManagement": "Pinia stores (auth/plan/chat) — 骨架已存在，部分尚未对接 API",
+    "sseProgress": "SseEmitter + ConcurrentHashMap 管理 emitter，支持异步生成进度推送",
+    "tokenRefresh": "Axios interceptor 实现 401 → refresh → retry 自动重试，并发请求排队机制"
   },
   "discoveredAt": "2026-07-07T18:30:00Z",
-  "lastUpdated": "2026-07-07T18:30:00Z"
+  "lastUpdated": "2026-07-08T15:00:00Z"
 }

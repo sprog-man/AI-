@@ -1,0 +1,26 @@
+{
+  "name": "test2",
+  "version": "1.0.0",
+  "description": "AI 旅行社是一个基于 ReAct Agent 的智能旅行规划平台。用户通过填写旅行表单（出发地、目的地、日期、偏好、出行方式、预算），AI Agent 自动整合多源数据生成完整旅行计划，并支持自然语言交互式调整。",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sprog-man/AI-.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/sprog-man/AI-/issues"
+  },
+  "homepage": "https://github.com/sprog-man/AI-#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "@types/node": "^26.1.0"
+  }
+}

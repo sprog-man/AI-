@@ -1,34 +1,45 @@
 {
-  "lastUpdated": "2026-07-07T18:30:00Z",
+  "lastUpdated": "2026-07-08T15:00:00Z",
   "currentProject": "测验2",
   "lastSession": {
-    "summary": "Feature-003 计划生成与CRUD实现",
+    "summary": "Feature-004 前端页面全面实现 — 计划展示/历史列表/Token刷新/表单校验/聊天微调",
     "completedTasks": [
       "feature-001: 项目骨架搭建",
       "feature-002: 认证模块完整实现",
-      "feature-003: 计划生成与CRUD完整实现"
+      "feature-003: 计划生成与CRUD完整实现",
+      "feature-004: 计划展示页面 (PlanView.vue) — 行程卡片/地图/预算/图片画廊/SSE进度",
+      "feature-004: 历史列表数据加载 (HistoryView.vue) — 分页/删除确认/空状态",
+      "feature-004: Token 自动刷新机制 (前端 interceptor) — 并发刷新/队列重试",
+      "feature-004: 表单前后端校验 (日期/密码/城市别名标准化)",
+      "feature-004: 聊天微调功能 (ChatController + AgentService) — 意图分类/JSON更新/增量修改"
     ],
     "blockers": [],
     "nextSteps": [
-      "实现 Agent 实际调用外部 API 生成计划",
-      "实现聊天微调完整逻辑",
-      "完善前端 FormView/PlanView 交互"
+      "实现 SSE 前端进度条对接 (已在 PlanView.vue 中完成)",
+      "完善后端表单校验 (日期合法性/城市名校验/频率限制)",
+      "完善权限校验 (计划 ownership 检查)",
+      "完善 Agent 降级策略 (API 超时缓存)",
+      "运行 Playwright E2E 测试验证完整流程"
     ]
   },
   "recentChanges": [
     { "date": "2026-07-07T14:00:00Z", "feature": "feature-001", "type": "merged", "files": 54, "lines": 1893 },
     { "date": "2026-07-07T14:16:00Z", "feature": "feature-002", "type": "merged", "files": 3, "lines": 169 },
     { "date": "2026-07-07T18:02:00Z", "feature": "feature-003", "type": "merged", "files": 3, "lines": 247 },
-    { "date": "2026-07-07T18:30:00Z", "feature": "harness-memory", "type": "commit", "files": 8, "lines": 175 }
+    { "date": "2026-07-07T18:30:00Z", "feature": "harness-memory", "type": "commit", "files": 8, "lines": 175 },
+    { "date": "2026-07-08T15:00:00Z", "feature": "feature-004", "type": "in_progress", "files": 8, "lines": 800 }
   ],
   "knownIssues": [
-    "AgentService.generatePlan() 目前是模拟实现，未实际调用外部 API",
-    "AgentService.chatModify() 是 TODO 占位实现",
-    "前端页面尚未对接真实 API"
+    "AgentService.generatePlan() prompt 使用简单字符串拼接，非真正的 ReAct loop",
+    "后端缺少表单日期合法性校验 (出发日期不能是过去)",
+    "后端缺少城市名标准化/不存在城市校验",
+    "后端缺少 Rate Limiting 实现 (Redis-based)",
+    "后端缺少计划 ownership 权限校验",
+    "Agent 降级策略 (API 熔断/缓存回退) 未实现"
   ],
   "environmentState": {
     "devServerRunning": false,
-    "lastSuccessfulBuild": "2026-07-07T18:02:43+08:00",
+    "lastSuccessfulBuild": "2026-07-08T15:00:00+08:00",
     "lastTypeCheck": "mvn compile SUCCESS"
   }
 }

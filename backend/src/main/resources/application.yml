@@ -42,6 +42,13 @@ langchain4j:
     streaming-chat-model:
       model-name: gpt-4o-mini
 
+JWT_SECRET: ${JWT_SECRET:this-is-a-secret-key-must-be-at-least-256-bits-long-for-hs256}
+JWT_ACCESS_EXPIRY_MS: ${JWT_ACCESS_EXPIRY_MS:3600000}
+JWT_REFRESH_EXPIRY_MS: ${JWT_REFRESH_EXPIRY_MS:604800000}
+TAVILY_API_KEY: ${TAVILY_API_KEY:tvly-placeholder}
+GAODE_API_KEY: ${GAODE_API_KEY:placeholder}
+UNSPLASH_ACCESS_KEY: ${UNSPLASH_ACCESS_KEY:placeholder}
+
 # Logging
 logging:
   level:

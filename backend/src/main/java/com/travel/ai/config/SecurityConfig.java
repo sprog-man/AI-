@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.PATCH, "/api/v1/plans/**").authenticated()
                 .requestMatchers(HttpMethod.DELETE, "/api/v1/plans/**").authenticated()
                 .requestMatchers(HttpMethod.POST, "/api/v1/plans/*/chat").authenticated()
+                .requestMatchers("/api/v1/plans/**/sse/progress").permitAll()
                 .anyRequest().authenticated()
             )
             .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
