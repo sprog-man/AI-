@@ -21,8 +21,11 @@
     "codeStyle": "Lombok 减少样板代码, BCrypt 密码加密, JWT 无状态认证, Axios interceptor 统一处理 Token 刷新",
     "stateManagement": "Pinia stores (auth/plan/chat) — 骨架已存在，部分尚未对接 API",
     "sseProgress": "SseEmitter + ConcurrentHashMap 管理 emitter，支持异步生成进度推送",
-    "tokenRefresh": "Axios interceptor 实现 401 → refresh → retry 自动重试，并发请求排队机制"
+    "tokenRefresh": "Axios interceptor 实现 401 → refresh → retry 自动重试，并发请求排队机制",
+    "ownershipCheck": "GET/PATCH/DELETE 端点均校验 authentication.credentials token 中的 userId 与 plan.user.id 一致",
+    "businessValidation": "CreatePlanRequest.validateBusinessRules() 校验日期合法性/范围限制",
+    "toolFallback": "所有 Tool 类 API 超时时返回占位 JSON（含 note 字段标记 fallback），不中断 Agent 流程"
   },
   "discoveredAt": "2026-07-07T18:30:00Z",
-  "lastUpdated": "2026-07-08T15:00:00Z"
+  "lastUpdated": "2026-07-08T16:00:00Z"
 }

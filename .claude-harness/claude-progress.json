@@ -1,8 +1,8 @@
 {
-  "lastUpdated": "2026-07-08T15:00:00Z",
+  "lastUpdated": "2026-07-08T16:00:00Z",
   "currentProject": "测验2",
   "lastSession": {
-    "summary": "Feature-004 前端页面全面实现 — 计划展示/历史列表/Token刷新/表单校验/聊天微调",
+    "summary": "Feature-004 完成 + 后端校验/权限/降级策略",
     "completedTasks": [
       "feature-001: 项目骨架搭建",
       "feature-002: 认证模块完整实现",
@@ -11,15 +11,18 @@
       "feature-004: 历史列表数据加载 (HistoryView.vue) — 分页/删除确认/空状态",
       "feature-004: Token 自动刷新机制 (前端 interceptor) — 并发刷新/队列重试",
       "feature-004: 表单前后端校验 (日期/密码/城市别名标准化)",
-      "feature-004: 聊天微调功能 (ChatController + AgentService) — 意图分类/JSON更新/增量修改"
+      "feature-004: 聊天微调功能 (ChatController + AgentService) — 意图分类/JSON更新/增量修改",
+      "fix: 后端表单校验 (CreatePlanRequest.validateBusinessRules)",
+      "fix: 权限校验 (GET/PATCH/DELETE ownership check)",
+      "fix: Agent 降级策略 (所有 Tool API 超时时返回占位数据)"
     ],
     "blockers": [],
     "nextSteps": [
-      "实现 SSE 前端进度条对接 (已在 PlanView.vue 中完成)",
-      "完善后端表单校验 (日期合法性/城市名校验/频率限制)",
-      "完善权限校验 (计划 ownership 检查)",
-      "完善 Agent 降级策略 (API 超时缓存)",
-      "运行 Playwright E2E 测试验证完整流程"
+      "运行 Playwright E2E 测试验证完整流程",
+      "完善 SSE 事件类型细化 (tool_call/tool_result/plan_progress/plan_complete)",
+      "Redis-based Rate Limiting 实现",
+      "Agent 缓存回退机制 (PlanCacheRepository)",
+      "Pinia Store 完全对接 API"
     ]
   },
   "recentChanges": [
@@ -27,19 +30,19 @@
     { "date": "2026-07-07T14:16:00Z", "feature": "feature-002", "type": "merged", "files": 3, "lines": 169 },
     { "date": "2026-07-07T18:02:00Z", "feature": "feature-003", "type": "merged", "files": 3, "lines": 247 },
     { "date": "2026-07-07T18:30:00Z", "feature": "harness-memory", "type": "commit", "files": 8, "lines": 175 },
-    { "date": "2026-07-08T15:00:00Z", "feature": "feature-004", "type": "in_progress", "files": 8, "lines": 800 }
+    { "date": "2026-07-08T15:00:00Z", "feature": "feature-004", "type": "merged", "files": 8, "lines": 4219 },
+    { "date": "2026-07-08T16:00:00Z", "feature": "backend-fixes", "type": "merged", "files": 7, "lines": 142 }
   ],
   "knownIssues": [
     "AgentService.generatePlan() prompt 使用简单字符串拼接，非真正的 ReAct loop",
-    "后端缺少表单日期合法性校验 (出发日期不能是过去)",
-    "后端缺少城市名标准化/不存在城市校验",
-    "后端缺少 Rate Limiting 实现 (Redis-based)",
-    "后端缺少计划 ownership 权限校验",
-    "Agent 降级策略 (API 熔断/缓存回退) 未实现"
+    "后端缺少 Redis-based Rate Limiting 实现",
+    "Agent 缓存回退机制 (PlanCacheRepository) 未接入",
+    "Pinia stores (auth/plan/chat) 骨架已存在但未完全对接 API",
+    "SSE 事件类型较简单（只有 status），缺少 tool_call/tool_result/plan_progress 细分"
   ],
   "environmentState": {
     "devServerRunning": false,
-    "lastSuccessfulBuild": "2026-07-08T15:00:00+08:00",
+    "lastSuccessfulBuild": "2026-07-08T16:00:00+08:00",
     "lastTypeCheck": "mvn compile SUCCESS"
   }
 }
